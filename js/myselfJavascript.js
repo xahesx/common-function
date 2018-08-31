@@ -9,7 +9,9 @@
  * 7.编辑跳转（选中后跳转）
  * 8.确认删除（确认后删除）
  * 9.动态渲染菜单（从后台获取数据）
- * 2018/8/28/20:05
+ * 10.复选框全选反选（包括动态生成以后的复选框）
+ * 11.文本框字数限制
+ * 2018/8/31/13:56
  */
 
 //页面局部刷新
@@ -323,3 +325,38 @@ function curzt(v){
       }
  }); 
 }
+
+//复选框全选反选
+$("#all").on('click',function() {  //用on来绑定事件
+	$("input[name='sel']").prop("checked", this.checked);  //prop来改变属性checked
+});  
+
+//当有一个选中状态取消时
+$("input[name='sel']").on('click',function() {  
+	var $subs = $("input[name='sel']");  
+	$("#all").prop("checked" , $subs.length == $subs.filter(":checked").length ? true :false);  //filter遍历checked，选中状态长度等于复选框长度时，三元表达式返回true,当选中状态的长度不等于复选框长度时，返回false
+});
+
+
+//文本框字符数限制
+<table>
+    <tr>
+        <td><label>原因描述<span class="cred">*</span></label></td>
+        <td>
+        <textarea id="orgAuditDesc" name="orgAuditDesc" placeholder="请填写审核原因描述"></textarea>
+        <p><span id="text-count">100</span>/100</p>
+        </td>
+    </tr>
+</table>
+
+/*字数限制*/
+$("#orgAuditDesc").on("input propertychange", function () {//propertychange 动态监听input中value
+    var $this = $(this),
+            _val = $this.val(),
+            count = "";
+    if (_val.length > 100) {
+        $this.val(_val.substring(0, 100));
+    }   
+    count = 100 - $this.val().length;
+    $("#text-count").text(count);
+});
